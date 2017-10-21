@@ -125,8 +125,8 @@ final class Movie
         string $tagline,
         string $title,
         float $voteAverage,
-        int $voteCount)
-    {
+        int $voteCount
+    ) {
         $this->budget = $budget;
         $this->genres = $genres;
         $this->homepage = $homepage;
@@ -159,6 +159,19 @@ final class Movie
     public function getGenres(): array
     {
         return $this->genres;
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function hasGenre(int $id): bool
+    {
+        $result = array_filter($this->genres, function (Genre $genre) use ($id) {
+            return $genre->getId() === $id;
+        });
+
+        return count($result) > 0;
     }
 
     /**

@@ -1,0 +1,26 @@
+{
+  "name": "darrigo/movie-catalog",
+  "description": "A movie catalog service",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabriele D'Arrigo",
+      "email": "darrigo.g@gmail.com"
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^6.2"
+  },
+  "minimum-stability": "alpha",
+  "autoload": {
+    "psr-4": {
+      "Darrigo\\MovieCatalog\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Darrigo\\MovieCatalog\\Tests\\": "tests/"
+    }
+  }
+}

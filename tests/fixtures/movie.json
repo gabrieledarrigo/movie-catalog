@@ -1,0 +1,35 @@
+{
+  "budget": 237000000,
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action"
+    },
+    {
+      "id": 12,
+      "name": "Adventure"
+    },
+    {
+      "id": 14,
+      "name": "Fantasy"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    }
+  ],
+  "homepage": "http://www.avatarmovie.com/",
+  "id": 19995,
+  "original_language": "en",
+  "original_title": "Avatar",
+  "overview": "In the 22nd century, a paraplegic Marine is dispatched to the moon Pandora on a unique mission, but becomes torn between following orders and protecting an alien civilization.",
+  "popularity": 150.437577,
+  "release_date": "2009-12-10",
+  "revenue": 2787965087,
+  "runtime": 162,
+  "status": "Released",
+  "tagline": "Enter the World of Pandora.",
+  "title": "",
+  "vote_average": 7.2,
+  "vote_count": 11800
+}

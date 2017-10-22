@@ -8,7 +8,9 @@
       "email": "darrigo.g@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "psr/container": "^1.0"
+  },
   "require-dev": {
     "phpunit/phpunit": "^6.2",
     "friendsofphp/php-cs-fixer": "^2.7"

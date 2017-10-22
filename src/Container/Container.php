@@ -3,16 +3,28 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Container;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Darrigo\MovieCatalog\Container\Exception\NotFoundException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Container implements ContainerInterface
 {
-    private $entries = [];
+    /**
+     * @var ArrayCollection $entries
+     */
+    private $entries;
+
+    public function __construct()
+    {
+        $this->entries = new ArrayCollection();
+    }
 
     public function get($id)
     {
-        // TODO: Implement get() method.
+        if (!$this->entries->containsKey($id)) {
+            throw new NotFoundException("No entry with id '$id' found");
+        }
+
+        return $this->entries->get($id);
     }
 
     public function has($id)
@@ -23,8 +35,6 @@ class Container implements ContainerInterface
 
     public function set(string $id, $entry)
     {
-        // TODO: Implement set() method.
+        return $this->entries->set($id, $entry);
     }
-
-
 }

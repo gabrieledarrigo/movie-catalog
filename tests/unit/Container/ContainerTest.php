@@ -1,10 +1,11 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Tests\Darrigo\MovieCatalog\Container;
 
 use Darrigo\MovieCatalog\Container\Container;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
+use Darrigo\MovieCatalog\Container\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,5 +32,22 @@ final class ContainerTest extends TestCase
         $this->container->set('a.service', $entry);
 
         $this->assertSame($this->container->get('a.service'), $entry);
+    }
+
+    /**
+     * @expectedException \Darrigo\MovieCatalog\Container\Exception\NotFoundException
+     * @expectedExceptionMessage No entry with id 'a.service' found
+     */
+    public function testItThrowANotFoundExceptionOnNotExistentEntry(): void
+    {
+        $this->container->get('a.service');
+    }
+
+    public function testItShouldKnowIfItHasAnEntry(): void
+    {
+        $entry = new \ArrayObject();
+        $this->container->set('a.service', $entry);
+
+        $this->assertTrue($this->container->has('a.service'));
     }
 }

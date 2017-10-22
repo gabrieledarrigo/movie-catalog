@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Darrigo\WeeklyOffers\Model;
+namespace Tests\Darrigo\MovieCatalog\Domain\Model;
 
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use PHPUnit\Framework\TestCase;

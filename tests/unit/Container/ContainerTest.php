@@ -5,7 +5,6 @@ namespace Tests\Darrigo\MovieCatalog\Container;
 
 use Darrigo\MovieCatalog\Container\Container;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
-use Darrigo\MovieCatalog\Container\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,5 +48,6 @@ final class ContainerTest extends TestCase
         $this->container->set('a.service', $entry);
 
         $this->assertTrue($this->container->has('a.service'));
+        $this->assertFalse($this->container->has('a.service.not.present'));
     }
 }

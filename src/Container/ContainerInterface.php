@@ -14,5 +14,5 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * @param $entry
      * @return mixed
      */
-    public function set(string $id, $entry);
+    public function set(string $id, $entry): void;
 }

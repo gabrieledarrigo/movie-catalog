@@ -6,6 +6,10 @@ namespace Darrigo\MovieCatalog\Container;
 use Darrigo\MovieCatalog\Container\Exception\NotFoundException;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Class Container
+ * @package Darrigo\MovieCatalog\Container
+ */
 class Container implements ContainerInterface
 {
     /**
@@ -13,28 +17,44 @@ class Container implements ContainerInterface
      */
     private $entries;
 
+    /**
+     * Container constructor.
+     */
     public function __construct()
     {
         $this->entries = new ArrayCollection();
     }
 
+    /**
+     * @param string $id
+     * @return mixed|null
+     * @throws NotFoundException
+     */
     public function get($id)
     {
-        if (!$this->entries->containsKey($id)) {
+        if (!$this->has($id)) {
             throw new NotFoundException("No entry with id '$id' found");
         }
 
         return $this->entries->get($id);
     }
 
-    public function has($id)
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function has($id): bool
     {
-        // TODO: Implement has() method.
+        return $this->entries->containsKey($id);
     }
 
-
-    public function set(string $id, $entry)
+    /**
+     * @param string $id
+     * @param $entry
+     * @return void
+     */
+    public function set(string $id, $entry): void
     {
-        return $this->entries->set($id, $entry);
+        $this->entries->set($id, $entry);
     }
 }

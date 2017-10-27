@@ -1,4 +1,7 @@
-.idea
 composer.phar
 clover.xml
 /vendor/
+
+.php_cs.cache
+.DS_Store
+.idea

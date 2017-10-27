@@ -8,6 +8,7 @@ use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Persistence\Provider\RedisProvider;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
+use Predis\Client;
 
 /**
  * Class RedisProviderTest
@@ -20,19 +21,26 @@ final class RedisProviderTest extends TestCase
      */
     protected $container;
 
+    /**
+     * @var Client|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $client;
+
     public function setUp()
     {
         parent::setUp();
         $this->container = $this->getMockForAbstractClass(ContainerInterface::class);
+        $this->client = $this->getMockBuilder(Client::class)->getMock();
     }
 
-    public function testItShouldRegisterVariourRedisRelatedDependencies(): void
+    public function testItShouldRegisterVariousRedisRelatedDependencies(): void
     {
         $provider = new RedisProvider();
+
+        $this->container->expects($this->once())
+            ->method('set')
+            ->with('persistence.redis.client');
+
         $provider->register($this->container);
-
-        $this->container->method('set')
-            ->with('redis.client');
-
     }
 }

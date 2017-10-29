@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class Container
  * @package Darrigo\MovieCatalog\Container
  */
-class Container implements ContainerInterface
+final class Container implements ContainerInterface
 {
     /**
      * @var ArrayCollection $entries

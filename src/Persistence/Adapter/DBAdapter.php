@@ -23,8 +23,7 @@ class DBAdapter implements StorageAdapter
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
-        $this->connection->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-
+        $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     }
 
     /**

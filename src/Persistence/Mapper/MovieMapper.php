@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Persistence\Mapper;
 
+use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Persistence\Adapter\StorageAdapter;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class MovieMapper
@@ -30,28 +33,69 @@ final class MovieMapper
      */
     public function fetch(int $id)
     {
-        return $this->adapter->fetch('SELECT * FROM movies WHERE id = :id', [':id' => $id]);
+        $data = $this->adapter->fetch('SELECT * FROM movies WHERE id = :id', [':id' => $id]);
+        return $this->map($data);
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function fetchAll(): array
+    public function fetchAll(): ArrayCollection
     {
-        return $statement = $this->adapter->fetchAll('SELECT * FROM movies');
+        $data = $this->adapter->fetchAll('SELECT * FROM movies');
+        return $this->mapArray($data);
     }
 
     /**
      * @param int $offset
      * @param int $perPage
-     * @return array
+     * @return ArrayCollection
      */
-    public function fetchWithOffset(int $offset, int $perPage): array
+    public function fetchWithOffset(int $offset, int $perPage): ArrayCollection
     {
-        return $this->adapter->fetchAll(
+        $data = $this->adapter->fetchAll(
             'SELECT * FROM movies LIMIT :offset, :per_page', [
             ':offset' => $offset,
             ':per_page' => $perPage
         ]);
+
+        return $this->mapArray($data);
+    }
+
+    /**
+     * @param array $data
+     * @return Movie
+     */
+    private function map(array $data): Movie
+    {
+        return new Movie(
+            (int) $data['id'],
+            (int) $data['budget'],
+            json_decode($data['genres'], true),
+            $data['homepage'],
+            $data['original_language'],
+            $data['original_title'],
+            $data['overview'],
+            (float) $data['popularity'],
+            new \DateTimeImmutable($data['release_date']),
+            $data['revenue'],
+            (int) $data['runtime'],
+            $data['status'],
+            $data['tagline'],
+            $data['title'],
+            (float) $data['vote_average'],
+            (int) $data['vote_count']
+        );
+    }
+
+    /**
+     * @param array $data
+     * @return Movie[]|ArrayCollection
+     */
+    private function mapArray(array $data): ArrayCollection
+    {
+        return new ArrayCollection(array_map(function ($d) {
+            return $this->map($d);
+        }, $data));
     }
 }

@@ -13,6 +13,11 @@ final class Movie
     /**
      * @var int
      */
+    private $id;
+
+    /**
+     * @var int
+     */
     private $budget;
 
     /**
@@ -24,11 +29,6 @@ final class Movie
      * @var string
      */
     private $homepage;
-
-    /**
-     * @var int
-     */
-    private $id;
 
     /**
      * @var string
@@ -92,10 +92,10 @@ final class Movie
 
     /**
      * Movie constructor.
+     * @param int $id
      * @param int $budget
      * @param Genre[] $genres
      * @param string $homepage
-     * @param int $id
      * @param string $originalLanguage
      * @param string $originalTitle
      * @param string $overview
@@ -110,10 +110,10 @@ final class Movie
      * @param int $voteCount
      */
     public function __construct(
+        int $id,
         int $budget,
         array $genres,
         string $homepage,
-        int $id,
         string $originalLanguage,
         string $originalTitle,
         string $overview,
@@ -126,11 +126,12 @@ final class Movie
         string $title,
         float $voteAverage,
         int $voteCount
-    ) {
+    )
+    {
+        $this->id = $id;
         $this->budget = $budget;
         $this->genres = $genres;
         $this->homepage = $homepage;
-        $this->id = $id;
         $this->originalLanguage = $originalLanguage;
         $this->originalTitle = $originalTitle;
         $this->overview = $overview;
@@ -143,6 +144,14 @@ final class Movie
         $this->title = $title;
         $this->voteAverage = $voteAverage;
         $this->voteCount = $voteCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
@@ -180,14 +189,6 @@ final class Movie
     public function getHomepage(): string
     {
         return $this->homepage;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

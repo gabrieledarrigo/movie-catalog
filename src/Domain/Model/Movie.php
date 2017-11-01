@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class Movie
  * @package Darrigo\MovieCatalog\Domain\Model
@@ -13,10 +15,15 @@ final class Movie
     /**
      * @var int
      */
+    private $id;
+
+    /**
+     * @var int
+     */
     private $budget;
 
     /**
-     * @var Genre[]
+     * @var Genre[]|ArrayCollection
      */
     private $genres;
 
@@ -24,11 +31,6 @@ final class Movie
      * @var string
      */
     private $homepage;
-
-    /**
-     * @var int
-     */
-    private $id;
 
     /**
      * @var string
@@ -92,10 +94,10 @@ final class Movie
 
     /**
      * Movie constructor.
-     * @param int $budget
-     * @param Genre[] $genres
-     * @param string $homepage
      * @param int $id
+     * @param int $budget
+     * @param Genre[]|ArrayCollection $genres
+     * @param string $homepage
      * @param string $originalLanguage
      * @param string $originalTitle
      * @param string $overview
@@ -110,10 +112,10 @@ final class Movie
      * @param int $voteCount
      */
     public function __construct(
-        int $budget,
-        array $genres,
-        string $homepage,
         int $id,
+        int $budget,
+        ArrayCollection $genres,
+        string $homepage,
         string $originalLanguage,
         string $originalTitle,
         string $overview,
@@ -125,12 +127,13 @@ final class Movie
         string $tagline,
         string $title,
         float $voteAverage,
-        int $voteCount)
+        int $voteCount
+    )
     {
+        $this->id = $id;
         $this->budget = $budget;
         $this->genres = $genres;
         $this->homepage = $homepage;
-        $this->id = $id;
         $this->originalLanguage = $originalLanguage;
         $this->originalTitle = $originalTitle;
         $this->overview = $overview;
@@ -148,17 +151,38 @@ final class Movie
     /**
      * @return int
      */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
     public function getBudget(): int
     {
         return $this->budget;
     }
 
     /**
-     * @return Genre[]
+     * @return Genre[]|ArrayCollection
      */
-    public function getGenres(): array
+    public function getGenres(): ArrayCollection
     {
         return $this->genres;
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function hasGenre(int $id): bool
+    {
+        $result = $this->genres->filter(function (Genre $genre) use ($id) {
+            return $genre->getId() === $id;
+        });
+
+        return $result->count() > 0;
     }
 
     /**
@@ -167,14 +191,6 @@ final class Movie
     public function getHomepage(): string
     {
         return $this->homepage;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

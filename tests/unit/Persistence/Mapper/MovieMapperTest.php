@@ -11,7 +11,7 @@ use Darrigo\MovieCatalog\Persistence\Adapter\DBAdapter;
 
 /**
  * Class MovieMapper
- * @package Tests\Darrigo\MovieCatalog\Persistence\Adapter
+ * @package Tests\Darrigo\MovieCatalog\Persistence\Mapper
  */
 final class MovieMapperTest extends TestCase
 {

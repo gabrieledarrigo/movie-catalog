@@ -14,10 +14,9 @@ $provider->register($container);
 
 $storage = $container->get('persistence.storage.mysql');
 $adapter = $container->get('persistence.adapter.db');
-$mapper = $container->get('persistence.mapper.movie');
+//$mapper = $container->get('persistence.mapper.movie');
+$mapper = $container->get('persistence.mapper.genre');
 
-/** @var  Movie $movie */
-$movie = $mapper->fetch(5);
 
-var_dump($movie->getId());
-var_dump($movie->getGenres());
+
+var_dump($mapper->fetchAll());

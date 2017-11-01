@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class MovieMapper
  * @package Darrigo\MovieCatalog\Persistence\Mapper
  */
-final class MovieMapper
+final class MovieMapper extends AbstractMapper
 {
     /**
      * @var StorageAdapter
@@ -66,7 +66,7 @@ final class MovieMapper
      * @param array $data
      * @return Movie
      */
-    private function map(array $data): Movie
+    public function map(array $data): Movie
     {
         return new Movie(
             (int) $data['id'],
@@ -86,16 +86,5 @@ final class MovieMapper
             (float) $data['vote_average'],
             (int) $data['vote_count']
         );
-    }
-
-    /**
-     * @param array $data
-     * @return Movie[]|ArrayCollection
-     */
-    private function mapArray(array $data): ArrayCollection
-    {
-        return new ArrayCollection(array_map(function ($d) {
-            return $this->map($d);
-        }, $data));
     }
 }

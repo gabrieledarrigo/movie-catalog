@@ -5,6 +5,7 @@ namespace Darrigo\MovieCatalog\Persistence\Provider;
 
 use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Persistence\Adapter\DBAdapter;
+use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
 use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
 use \PDO;
 
@@ -36,6 +37,11 @@ class StorageProvider implements ProviderInterface
         $container->set(
             'persistence.mapper.movie',
             new MovieMapper($container->get('persistence.adapter.db'))
+        );
+
+        $container->set(
+            'persistence.mapper.genre',
+            new GenreMapper($container->get('persistence.adapter.db'))
         );
     }
 }

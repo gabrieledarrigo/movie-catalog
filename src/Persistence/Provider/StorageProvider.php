@@ -35,13 +35,13 @@ class StorageProvider implements ProviderInterface
         );
 
         $container->set(
-            'persistence.mapper.movie',
-            new MovieMapper($container->get('persistence.adapter.db'))
+            'persistence.mapper.genre',
+            new GenreMapper($container->get('persistence.adapter.db'))
         );
 
         $container->set(
-            'persistence.mapper.genre',
-            new GenreMapper($container->get('persistence.adapter.db'))
+            'persistence.mapper.movie',
+            new MovieMapper($container->get('persistence.adapter.db'), $container->get('persistence.mapper.genre'))
         );
     }
 }

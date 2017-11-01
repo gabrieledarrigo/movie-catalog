@@ -50,6 +50,16 @@ final class GenreMapperTest extends TestCase
         ],
     ];
 
+    /**
+     * @var array
+     */
+    private $expectedGenresNames = ['Adventure', 'Animation', 'Action', 'Horror', 'Drama', 'Fantasy'];
+
+    /**
+     * @var array
+     */
+    private $expectedGenresId = [12, 14, 16, 18, 27, 28];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -59,7 +69,7 @@ final class GenreMapperTest extends TestCase
             ->getMock();
     }
 
-    public function testItShouldRetrieveAMovieFromTheDatabase()
+    public function testItShouldRetrieveASpecificGenreFromTheDatabase()
     {
         $id = 12;
         $movieMapper = new GenreMapper($this->adapter);
@@ -76,11 +86,8 @@ final class GenreMapperTest extends TestCase
         $this->assertEquals($this->genres[0]['name'], $result->getName());
     }
 
-    public function testItShouldRetrieveAnArrayOfUniqueGenresFromTheDatabase()
+    public function testItShouldRetrieveAnArrayOfGenresFromTheDatabase()
     {
-        $expectedGenresNames = ['Adventure', 'Animation', 'Action', 'Horror', 'Drama', 'Fantasy'];
-        $expectedGenresId = [12, 14, 16, 18, 27, 28];
-
         $mapper = new GenreMapper($this->adapter);
 
         $this->adapter->expects($this->once())
@@ -90,14 +97,36 @@ final class GenreMapperTest extends TestCase
 
         /** @var ArrayCollection $result */
         $result = $mapper->fetchAll();
-        $this->assertInstanceOf(ArrayCollection::class, $result);
-        $this->assertEquals(count($this->genres), $result->count());
-        $this->assertContainsOnlyInstancesOf(Genre::class, $result);
+        $this->assertGenresCollection($result);
+    }
+
+    public function testItShouldRetrieveAnArrayOfGenresWithSpecificIds()
+    {
+        $mapper = new GenreMapper($this->adapter);
+
+        $this->adapter->expects($this->once())
+            ->method('fetchAll')
+            ->with('SELECT * FROM genres WHERE id IN(?,?,?,?,?,?)', $this->expectedGenresId)
+            ->willReturn($this->genres);
+
+        /** @var ArrayCollection $result */
+        $result = $mapper->fetchAllWithIds($this->expectedGenresId);
+        $this->assertGenresCollection($result);
+    }
+
+    /**
+     * @param ArrayCollection $actual
+     */
+    private function assertGenresCollection(ArrayCollection $actual): void
+    {
+        $this->assertInstanceOf(ArrayCollection::class, $actual);
+        $this->assertEquals(count($this->genres), $actual->count());
+        $this->assertContainsOnlyInstancesOf(Genre::class, $actual);
 
         /** @var Genre $genre */
-        foreach ($result as $genre) {
-            $this->assertContains($genre->getId(), $expectedGenresId);
-            $this->assertContains($genre->getName(), $expectedGenresNames);
+        foreach ($actual as $genre) {
+            $this->assertContains($genre->getId(), $this->expectedGenresId);
+            $this->assertContains($genre->getName(), $this->expectedGenresNames);
         }
     }
 }

@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class MovieMapper
  * @package Darrigo\MovieCatalog\Persistence\Mapper
  */
-final class GenreMapper extends AbstractMapper
+class GenreMapper extends AbstractMapper
 {
     /**
      * @var StorageAdapter
@@ -43,6 +43,17 @@ final class GenreMapper extends AbstractMapper
     public function fetchAll(): ArrayCollection
     {
         $data = $this->adapter->fetchAll('SELECT * FROM genres');
+        return $this->mapArray($data);
+    }
+
+    /**
+     * @param array $ids
+     * @return ArrayCollection
+     */
+    public function fetchAllWithIds(array $ids): ArrayCollection
+    {
+        $placeholders = str_repeat('?,', count($ids) - 1) . '?';
+        $data = $this->adapter->fetchAll("SELECT * FROM genres WHERE id IN($placeholders)", $ids);
         return $this->mapArray($data);
     }
 

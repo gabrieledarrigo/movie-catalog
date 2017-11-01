@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class Movie
  * @package Darrigo\MovieCatalog\Domain\Model
@@ -21,7 +23,7 @@ final class Movie
     private $budget;
 
     /**
-     * @var Genre[]
+     * @var Genre[]|ArrayCollection
      */
     private $genres;
 
@@ -94,7 +96,7 @@ final class Movie
      * Movie constructor.
      * @param int $id
      * @param int $budget
-     * @param Genre[] $genres
+     * @param Genre[]|ArrayCollection $genres
      * @param string $homepage
      * @param string $originalLanguage
      * @param string $originalTitle
@@ -112,7 +114,7 @@ final class Movie
     public function __construct(
         int $id,
         int $budget,
-        array $genres,
+        ArrayCollection $genres,
         string $homepage,
         string $originalLanguage,
         string $originalTitle,
@@ -163,9 +165,9 @@ final class Movie
     }
 
     /**
-     * @return Genre[]
+     * @return Genre[]|ArrayCollection
      */
-    public function getGenres(): array
+    public function getGenres(): ArrayCollection
     {
         return $this->genres;
     }
@@ -176,11 +178,11 @@ final class Movie
      */
     public function hasGenre(int $id): bool
     {
-        $result = array_filter($this->genres, function (Genre $genre) use ($id) {
+        $result = $this->genres->filter(function (Genre $genre) use ($id) {
             return $genre->getId() === $id;
         });
 
-        return count($result) > 0;
+        return $result->count() > 0;
     }
 
     /**

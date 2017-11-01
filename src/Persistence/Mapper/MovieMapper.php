@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class MovieMapper
  * @package Darrigo\MovieCatalog\Persistence\Mapper
  */
-final class MovieMapper extends AbstractMapper
+class MovieMapper extends AbstractMapper
 {
     /**
      * @var StorageAdapter
@@ -19,12 +19,19 @@ final class MovieMapper extends AbstractMapper
     private $adapter;
 
     /**
-     * MovieMapper constructor.
-     * @param $adapter
+     * @var GenreMapper
      */
-    public function __construct(StorageAdapter $adapter)
+    private $genreMapper;
+
+    /**
+     * MovieMapper constructor.
+     * @param StorageAdapter $adapter
+     * @param GenreMapper $genreMapper
+     */
+    public function __construct(StorageAdapter $adapter, GenreMapper $genreMapper)
     {
         $this->adapter = $adapter;
+        $this->genreMapper = $genreMapper;
     }
 
     /**
@@ -71,7 +78,7 @@ final class MovieMapper extends AbstractMapper
         return new Movie(
             (int) $data['id'],
             (int) $data['budget'],
-            json_decode($data['genres'], true),
+            $this->genreMapper->fetchAllWithIds(json_decode($data['genres'], true)),
             $data['homepage'],
             $data['original_language'],
             $data['original_title'],

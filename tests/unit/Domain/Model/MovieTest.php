@@ -5,6 +5,7 @@ namespace Tests\Darrigo\MovieCatalog\Domain\Model;
 
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 final class MovieTest extends TestCase
 {
     /**
-     * @var Genre[]
+     * @var Genre[]|ArrayCollection
      */
     private $genres;
 
@@ -26,10 +27,10 @@ final class MovieTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->genres = [
+        $this->genres = new ArrayCollection([
             new Genre(1, 'Action'),
             new Genre(2, 'Fantasy')
-        ];
+        ]);
 
         $this->dateTime = new \DateTimeImmutable('2009-12-10');
     }
@@ -37,10 +38,10 @@ final class MovieTest extends TestCase
     public function testItIsADomainModelRepresentingAMovie(): void
     {
         $movie = new Movie(
+            19995,
             237000000,
             $this->genres,
             'http://www.avatarmovie.com/',
-            19995,
             'en',
             'Avatar',
             'In the 22nd century...',
@@ -55,10 +56,10 @@ final class MovieTest extends TestCase
             11800
         );
 
+        $this->assertEquals(19995, $movie->getId());
         $this->assertEquals(237000000, $movie->getBudget());
         $this->assertSame($this->genres, $movie->getGenres());
         $this->assertEquals('http://www.avatarmovie.com/', $movie->getHomepage());
-        $this->assertEquals(19995, $movie->getId());
         $this->assertEquals('en', $movie->getOriginalLanguage());
         $this->assertEquals('Avatar', $movie->getOriginalTitle());
         $this->assertEquals('In the 22nd century...', $movie->getOverview());
@@ -76,10 +77,10 @@ final class MovieTest extends TestCase
     public function testItShouldKnowIfItHasASpecificGenre(): void
     {
         $movie = new Movie(
+            19995,
             237000000,
             $this->genres,
             'http://www.avatarmovie.com/',
-            19995,
             'en',
             'Avatar',
             'In the 22nd century...',

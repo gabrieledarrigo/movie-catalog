@@ -62,7 +62,7 @@ class Movies implements MovieRepository
     {
         /*
          * I know, this is a madness from each point of view,
-         * But it's just to give the idea that a Repository is a collection of objects.
+         * But it's just to give the idea that a Repository is a collection of objects : P
          */
         $movies = $this->movieMapper->fetchAll();
 

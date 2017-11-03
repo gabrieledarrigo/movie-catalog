@@ -8,9 +8,8 @@ use Darrigo\MovieCatalog\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class GenreTest
- * @package Tests\Darrigo\WeeklyOffers\Model
- * @author darrigo.g@gmail.com
+ * Class ContainerTest
+ * @package Tests\Darrigo\MovieCatalog\Container
  */
 final class ContainerTest extends TestCase
 {

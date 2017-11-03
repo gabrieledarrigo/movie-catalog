@@ -7,6 +7,7 @@ use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Persistence\Adapter\DBAdapter;
 use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
 use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
+use Darrigo\MovieCatalog\Shared\ProviderInterface;
 use \PDO;
 
 /**

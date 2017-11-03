@@ -61,10 +61,12 @@ class MovieMapper extends AbstractMapper
     public function fetchWithOffset(int $offset, int $perPage): ArrayCollection
     {
         $data = $this->adapter->fetchAll(
-            'SELECT * FROM movies LIMIT :offset, :per_page', [
+            'SELECT * FROM movies LIMIT :offset, :per_page',
+            [
             ':offset' => $offset,
             ':per_page' => $perPage
-        ]);
+        ]
+        );
 
         return $this->mapArray($data);
     }

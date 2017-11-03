@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Darrigo\MovieCatalog\Shared\Provider;
+namespace Darrigo\MovieCatalog\Shared;
 
 use Darrigo\MovieCatalog\Container\ContainerInterface;
 

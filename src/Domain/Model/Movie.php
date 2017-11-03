@@ -128,8 +128,7 @@ final class Movie
         string $title,
         float $voteAverage,
         int $voteCount
-    )
-    {
+    ) {
         $this->id = $id;
         $this->budget = $budget;
         $this->genres = $genres;

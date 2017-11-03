@@ -21,5 +21,4 @@ abstract class AbstractMapper implements MapperInterface
             return $this->map($d);
         }, $data));
     }
-
 }

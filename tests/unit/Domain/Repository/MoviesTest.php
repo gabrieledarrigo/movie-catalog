@@ -32,7 +32,8 @@ final class MoviesTest extends TestCase
         parent::setUp();
 
         $this->movies = new ArrayCollection([
-            new Movie(15,
+            new Movie(
+                15,
                 4000000,
                 new ArrayCollection([new Genre(80, 'Crime')]),
                 '',

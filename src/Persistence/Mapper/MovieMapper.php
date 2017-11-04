@@ -5,6 +5,7 @@ namespace Darrigo\MovieCatalog\Persistence\Mapper;
 
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Persistence\Adapter\StorageAdapter;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -36,11 +37,17 @@ class MovieMapper extends AbstractMapper
 
     /**
      * @param int $id
-     * @return mixed
+     * @return Movie
+     * @throws NoResultException
      */
     public function fetch(int $id)
     {
         $data = $this->adapter->fetch('SELECT * FROM movies WHERE id = :id', [':id' => $id]);
+
+        if ($data === null) {
+            throw new NoResultException("No result with id $id can be found");
+        }
+
         return $this->map($data);
     }
 
@@ -63,9 +70,9 @@ class MovieMapper extends AbstractMapper
         $data = $this->adapter->fetchAll(
             'SELECT * FROM movies LIMIT :offset, :per_page',
             [
-            ':offset' => $offset,
-            ':per_page' => $perPage
-        ]
+                ':offset' => $offset,
+                ':per_page' => $perPage
+            ]
         );
 
         return $this->mapArray($data);
@@ -77,23 +84,27 @@ class MovieMapper extends AbstractMapper
      */
     public function map(array $data): Movie
     {
+        $genres = $data['genres'] === null
+            ? null
+            : $this->genreMapper->fetchAllWithIds(json_decode($data['genres'], true));
+
         return new Movie(
-            (int) $data['id'],
-            (int) $data['budget'],
-            $this->genreMapper->fetchAllWithIds(json_decode($data['genres'], true)),
+            (int)$data['id'],
+            (int)$data['budget'],
+            $genres ,
             $data['homepage'],
             $data['original_language'],
             $data['original_title'],
             $data['overview'],
-            (float) $data['popularity'],
+            (float)$data['popularity'],
             new \DateTimeImmutable($data['release_date']),
             $data['revenue'],
-            (int) $data['runtime'],
+            (int)$data['runtime'],
             $data['status'],
             $data['tagline'],
             $data['title'],
-            (float) $data['vote_average'],
-            (int) $data['vote_count']
+            (float)$data['vote_average'],
+            (int)$data['vote_count']
         );
     }
 }

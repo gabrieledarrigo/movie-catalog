@@ -24,7 +24,7 @@ class StorageProvider implements ProviderInterface
         $container->set(
             'persistence.storage.mysql',
             new PDO(
-                'mysql:dbname=movie_catalog;host=127.0.0.1',
+                'mysql:dbname=movie_catalog;host=127.0.0.1;charset=utf8mb4',
                 'movie_user',
                 'password'
             )

@@ -86,6 +86,23 @@ final class GenreMapperTest extends TestCase
         $this->assertEquals($this->genres[0]['name'], $result->getName());
     }
 
+    /**
+     * @expectedException \Darrigo\MovieCatalog\Persistence\Exception\NoResultException
+     * @expectedExceptionMessage No result with id 314 can be found
+     */
+    public function testItShouldThrowANoResultExceptionIfAGenreDoesNotExists(): void
+    {
+        $id = 314;
+        $movieMapper = new GenreMapper($this->adapter);
+
+        $this->adapter->expects($this->once())
+            ->method('fetch')
+            ->with('SELECT * FROM genres WHERE id = :id', [':id' => $id])
+            ->willReturn(null);
+
+        $movieMapper->fetch($id);
+    }
+
     public function testItShouldRetrieveAnArrayOfGenresFromTheDatabase()
     {
         $mapper = new GenreMapper($this->adapter);

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Domain\Repository;
 
+use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -30,10 +32,15 @@ class Genres implements GenresRepository
     /**
      * @param int $id
      * @return Genre
+     * @throws NoDomainModelException
      */
     public function get(int $id): Genre
     {
-        return $this->genreMapper->fetch($id);
+        try {
+            return $this->genreMapper->fetch($id);
+        } catch (NoResultException $e) {
+            throw new NoDomainModelException("No Genre with id $id can be found");
+        }
     }
 
     /**

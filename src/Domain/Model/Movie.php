@@ -114,7 +114,7 @@ final class Movie
     public function __construct(
         int $id,
         int $budget,
-        ArrayCollection $genres,
+        ArrayCollection $genres = null,
         string $homepage,
         string $originalLanguage,
         string $originalTitle,

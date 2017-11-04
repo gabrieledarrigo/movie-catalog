@@ -31,11 +31,10 @@ class DBAdapter implements StorageAdapter
      * @param array $parameters
      * @return mixed
      */
-    public function fetch(string $statement, array $parameters = []): array
+    public function fetch(string $statement, array $parameters = []): ?array
     {
-        $statement = $this->connection->prepare($statement);
-        $statement->execute($parameters);
-        return $statement->fetch();
+        $statement = $this->prepare($statement, $parameters);
+        return $statement->fetch() ?: null;
     }
 
     /**
@@ -45,8 +44,19 @@ class DBAdapter implements StorageAdapter
      */
     public function fetchAll(string $statement, array $parameters = []): array
     {
+        $statement = $this->prepare($statement, $parameters);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param string $statement
+     * @param array $parameters
+     * @return \PDOStatement
+     */
+    private function prepare(string $statement, array $parameters = []): \PDOStatement
+    {
         $statement = $this->connection->prepare($statement);
         $statement->execute($parameters);
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $statement;
     }
 }

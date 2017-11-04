@@ -11,5 +11,6 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: movie_catalog
     volumes:
-        - ./var/mysql:/var/lib/mysql
+        - ./data:/etc/mysql/conf.d
         - ./data:/docker-entrypoint-initdb.d
+        - ./var/mysql:/var/lib/mysql

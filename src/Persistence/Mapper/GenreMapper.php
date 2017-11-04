@@ -5,6 +5,7 @@ namespace Darrigo\MovieCatalog\Persistence\Mapper;
 
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Persistence\Adapter\StorageAdapter;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -29,11 +30,17 @@ class GenreMapper extends AbstractMapper
 
     /**
      * @param int $id
-     * @return mixed
+     * @return Genre
+     * @throws NoResultException
      */
     public function fetch(int $id)
     {
         $data = $this->adapter->fetch('SELECT * FROM genres WHERE id = :id', [':id' => $id]);
+
+        if ($data === null) {
+            throw new NoResultException("No result with id $id can be found");
+        }
+
         return $this->map($data);
     }
 

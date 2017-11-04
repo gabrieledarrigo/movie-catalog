@@ -3,22 +3,57 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Application;
 
+use Darrigo\MovieCatalog\Application\Provider\ApplicationProvider;
+use Darrigo\MovieCatalog\Container\ContainerInterface;
+use Darrigo\MovieCatalog\Domain\Provider\DomainProvider;
+use Darrigo\MovieCatalog\Persistence\Provider\StorageProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Class Application
+ * @package Darrigo\MovieCatalog\Application
+ */
 class Application
 {
-    public function init()
+    /**
+     * @var ContainerInterface $container
+     */
+    private $container;
+
+    /**
+     * Application constructor.
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $request = Request::createFromGlobals();
-        $routes = new RouteCollection();
+        $this->container = $container;
+    }
 
-        $context = new RequestContext();
-        $context->fromRequest($request);
+    /**
+     * Register application's provider.
+     */
+    private function registerProvider(): void
+    {
+        (new StorageProvider())->register($this->container);
+        (new DomainProvider())->register($this->container);
+        (new ApplicationProvider())->register($this->container);
+    }
 
-        $front = new FrontController(new UrlMatcher($routes, $context));
-        $front->handle($request);
+    /**
+     * @return Response
+     */
+    public function bootstrap(): Response
+    {
+        $this->registerProvider();
+
+        /** @var Request $request */
+        $request = $this->container->get('application.request');
+
+        /** @var FrontController $frontController */
+        $frontController = $this->container->get('application.front.controller');
+        return $frontController->handle($request);
     }
 }

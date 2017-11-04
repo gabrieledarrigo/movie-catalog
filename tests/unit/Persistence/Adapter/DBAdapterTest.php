@@ -37,13 +37,57 @@ final class DBAdapterTest extends TestCase
             ->getMock();
     }
 
-    public function testItShouldExecuteAPreparedStatementAgainstTheDatabaseFetchingASingleObject()
+    public function testItShouldExecuteAPreparedStatementAgainstTheDatabaseFetchingASingleRow(): void
     {
+        $result = ['id' => 15, 'title' => 'Star Wars'];
         $statement = 'SELECT * FROM movies WHERE id = :id';
         $parameters = [':id' => 15];
+        $this->setupPDOExpectation($statement, $parameters);
 
         $adapter = new DBAdapter($this->connection);
 
+        $this->statement->expects($this->once())
+            ->method('fetch')
+            ->willReturn($result);
+
+        $this->assertEquals($result, $adapter->fetch($statement, $parameters));
+    }
+
+    public function testItShouldReturnNullIfNoRowCanBeFetchedFromTheDatabase(): void
+    {
+        $statement = 'SELECT * FROM movies WHERE id = :id';
+        $parameters = [':id' => 15];
+        $this->setupPDOExpectation($statement, $parameters);
+
+        $adapter = new DBAdapter($this->connection);
+
+        $this->statement->expects($this->once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        $this->assertEquals(null, $adapter->fetch($statement, $parameters));
+    }
+
+    public function testItShouldExecuteAPreparedStatementAgainstTheDatabaseFetchingMultipleRows(): void
+    {
+        $statement = 'SELECT * FROM movies';
+        $this->setupPDOExpectation($statement, []);
+
+        $adapter = new DBAdapter($this->connection);
+
+        $this->statement->expects($this->once())
+            ->method('fetchAll')
+            ->willReturn([]);
+
+        $adapter->fetchAll($statement);
+    }
+
+    /**
+     * @param string $statement
+     * @param array $parameters
+     */
+    private function setupPDOExpectation(string $statement, array $parameters): void
+    {
         $this->connection->expects($this->once())
             ->method('prepare')
             ->with($statement)
@@ -52,32 +96,5 @@ final class DBAdapterTest extends TestCase
         $this->statement->expects($this->once())
             ->method('execute')
             ->with($parameters);
-
-        $this->statement->expects($this->once())
-            ->method('fetch')
-            ->willReturn([]);
-
-        $adapter->fetch($statement, $parameters);
-    }
-
-    public function testItShouldExecuteAPreparedStatementAgainstTheDatabaseFetchingAnArrayOfObject()
-    {
-        $statement = 'SELECT * FROM movies';
-        $adapter = new DBAdapter($this->connection);
-
-        $this->connection->expects($this->once())
-            ->method('prepare')
-            ->with($statement)
-            ->willReturn($this->statement);
-
-        $this->statement->expects($this->once())
-            ->method('execute')
-            ->with([]);
-
-        $this->statement->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn([]);
-
-        $adapter->fetchAll($statement);
     }
 }

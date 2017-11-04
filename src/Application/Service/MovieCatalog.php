@@ -27,14 +27,21 @@ class MovieCatalog implements MovieCatalogInterface
     private $genresRepository;
 
     /**
+     * @var Pagination $pagination
+     */
+    private $pagination;
+
+    /**
      * MovieCatalog constructor.
      * @param MoviesRepository $moviesRepository
      * @param GenresRepository $genreRepository
+     * @param PaginationInterface $pagination
      */
-    public function __construct(MoviesRepository $moviesRepository, GenresRepository $genreRepository)
+    public function __construct(MoviesRepository $moviesRepository, GenresRepository $genreRepository, PaginationInterface $pagination)
     {
         $this->movieRepository = $moviesRepository;
         $this->genresRepository = $genreRepository;
+        $this->pagination = $pagination;
     }
 
     /**
@@ -51,11 +58,15 @@ class MovieCatalog implements MovieCatalogInterface
     }
 
     /**
+     * @param int $page
      * @return Option
      */
-    public function getMovies(): Option
+    public function getMovies(int $page = Pagination::DEFAULT_PAGE): Option
     {
-        return new Some($this->movieRepository->getAll());
+        return new Some($this->movieRepository->getInRange(
+            $this->pagination->offset($page),
+            Pagination::PER_PAGE
+        ));
     }
 
     /**
@@ -66,7 +77,7 @@ class MovieCatalog implements MovieCatalogInterface
     {
         try {
             return new Some($this->genresRepository->get($id));
-        } catch(NoDomainModelException $e) {
+        } catch (NoDomainModelException $e) {
             return None::create();
         }
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Darrigo\MovieCatalog\Application;
 
 use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
+use Darrigo\MovieCatalog\Application\Service\Pagination;
 use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
@@ -35,6 +36,11 @@ final class MovieCatalogTest extends TestCase
     private $moviesRepository;
 
     /**
+     * @var Pagination|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $pagination;
+
+    /**
      * @var GenresRepository|\PHPUnit_Framework_MockObject_MockObject
      */
     private $genresRepository;
@@ -44,6 +50,7 @@ final class MovieCatalogTest extends TestCase
         parent::setUp();
         $this->moviesRepository = $this->getMockForAbstractClass(MoviesRepository::class);
         $this->genresRepository = $this->getMockForAbstractClass(GenresRepository::class);
+        $this->pagination = $this->getMockBuilder(Pagination::class)->getMock();
         $this->movies = new ArrayCollection([
             new Movie(
                 15,
@@ -99,7 +106,7 @@ final class MovieCatalogTest extends TestCase
             ->with($id)
             ->willReturn($this->movies->first());
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
         $result = $movieCatalog->getMovie($id);
 
         $this->assertFalse($result->isEmpty());
@@ -114,21 +121,30 @@ final class MovieCatalogTest extends TestCase
             ->with($id)
             ->willThrowException(new NoDomainModelException());
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
         $result = $movieCatalog->getMovie($id);
 
         $this->assertTrue($result->isEmpty());
         $this->assertSame(None::create(), $result);
     }
 
-    public function testItShouldReturnAnOptionWithACollectionOfMovies(): void
+    public function testItShouldReturnAnOptionWithACollectionOfPaginatedMovies(): void
     {
+        $page = 1;
+        $offset = 10;
+
+        $this->pagination->expects($this->once())
+            ->method('offset')
+            ->with($page)
+            ->willReturn($offset);
+
         $this->moviesRepository->expects($this->once())
-            ->method('getAll')
+            ->method('getInRange')
+            ->with($offset, Pagination::PER_PAGE)
             ->willReturn($this->movies);
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
-        $result = $movieCatalog->getMovies();
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
+        $result = $movieCatalog->getMovies($page);
 
         $this->assertFalse($result->isEmpty());
         $this->assertEquals($this->movies, $result->get());
@@ -142,7 +158,7 @@ final class MovieCatalogTest extends TestCase
             ->with($id)
             ->willReturn($this->genres->first());
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
         $result = $movieCatalog->getGenre($id);
 
         $this->assertFalse($result->isEmpty());
@@ -157,7 +173,7 @@ final class MovieCatalogTest extends TestCase
             ->with($id)
             ->willThrowException(new NoDomainModelException());
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
         $result = $movieCatalog->getGenre($id);
 
         $this->assertTrue($result->isEmpty());
@@ -170,7 +186,7 @@ final class MovieCatalogTest extends TestCase
             ->method('getAll')
             ->willReturn($this->genres);
 
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository, $this->pagination);
         $result = $movieCatalog->getGenres();
 
         $this->assertFalse($result->isEmpty());

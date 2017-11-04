@@ -13,7 +13,7 @@ interface MovieCatalogInterface
 {
     public function getMovie(int $id): Option;
 
-    public function getMovies(): Option;
+    public function getMovies(int $page): Option;
 
     public function getGenre(int $id): Option;
 

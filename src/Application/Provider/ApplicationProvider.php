@@ -6,6 +6,7 @@ namespace Darrigo\MovieCatalog\Application\Provider;
 use Darrigo\MovieCatalog\Application\Controller\MovieController;
 use Darrigo\MovieCatalog\Application\FrontController;
 use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
+use Darrigo\MovieCatalog\Application\Service\Pagination;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Shared\ProviderInterface;
 use JMS\Serializer\SerializerBuilder;
@@ -59,9 +60,12 @@ class ApplicationProvider implements ProviderInterface
      */
     private function registerServices(ContainerInterface $container): void
     {
+        $container->set('application.service.pagination', new Pagination());
+
         $container->set('application.service.movie.catalog', new MovieCatalog(
             $container->get('domain.repository.movies'),
-            $container->get('domain.repository.genres')
+            $container->get('domain.repository.genres'),
+            $container->get('application.service.pagination')
         ));
     }
 

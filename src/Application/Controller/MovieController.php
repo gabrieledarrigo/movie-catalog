@@ -59,7 +59,8 @@ class MovieController
      */
     public function getAll(Request $request): Response
     {
-        $movies = $this->movieCatalog->getMovies();
+        $page = $request->get('page');
+        $movies = $this->movieCatalog->getMovies((int) $page);
         $data = $this->serializer->serialize($movies->get(), 'json');
 
         return new Response($data, Response::HTTP_OK, [

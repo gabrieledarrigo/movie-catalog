@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Application\Provider;
 
+use Darrigo\MovieCatalog\Application\Controller\GenreController;
 use Darrigo\MovieCatalog\Application\Controller\MovieController;
 use Darrigo\MovieCatalog\Application\FrontController;
 use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
@@ -78,6 +79,11 @@ class ApplicationProvider implements ProviderInterface
             $container->get('application.service.movie.catalog'),
             $container->get('application.serializer')
         ));
+
+        $container->set('application.controller.genre', new GenreController(
+            $container->get('application.service.movie.catalog'),
+            $container->get('application.serializer')
+        ));
     }
 
     /**
@@ -97,6 +103,18 @@ class ApplicationProvider implements ProviderInterface
         $routes->add('movies.get.id', (new Route('/movies/{id}', [
             '_controller' => [
                 $container->get('application.controller.movie'), 'get'
+            ]
+        ]))->setMethods('GET'));
+
+        $routes->add('genres.get', (new Route('/genres', [
+            '_controller' => [
+                $container->get('application.controller.genre'), 'getAll'
+            ]
+        ]))->setMethods('GET'));
+
+        $routes->add('genres.get.id', (new Route('/genres/{id}', [
+            '_controller' => [
+                $container->get('application.controller.genre'), 'get'
             ]
         ]))->setMethods('GET'));
     }

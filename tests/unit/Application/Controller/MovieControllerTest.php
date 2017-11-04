@@ -82,7 +82,7 @@ final class MovieControllerTest extends TestCase
         ]);
     }
 
-    public function testItShouldReturnAResponseContainingAJsonEncodedMovies(): void
+    public function testItShouldReturnAResponseContainingAJsonEncodedMovie(): void
     {
         $request = Request::create('/movies');
         $request->attributes->add(['id' => 15]);

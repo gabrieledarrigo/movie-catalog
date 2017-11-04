@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Interface MovieRepository
- * @package Darrigo\MovieCatalog\MoviesTest
+ * @package Darrigo\MovieCatalog\Domain\Repository
  */
-interface MovieRepository
+interface MoviesRepository
 {
     /**
      * @param int $id

@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class MovieTest
- * @package Tests\Darrigo\WeeklyOffers\Model
- * @author darrigo.g@gmail.com
+ * @package Tests\Darrigo\MovieCatalog\Domain\Model
  */
 final class MovieTest extends TestCase
 {

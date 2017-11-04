@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class GenreTest
- * @package Tests\Darrigo\WeeklyOffers\Model
- * @author darrigo.g@gmail.com
+ * @package Tests\Darrigo\MovieCatalog\Domain\Model
  */
 final class GenreTest extends TestCase
 {

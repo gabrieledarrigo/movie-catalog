@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Darrigo\MovieCatalog\Container\Container;
+use Darrigo\MovieCatalog\Application\Application;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
 use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
@@ -23,5 +24,10 @@ $movieMapper = $container->get('persistence.mapper.movie');
 /** @var GenreMapper $genreMapper */
 $genreMapper = $container->get('persistence.mapper.genre');
 
-var_dump($movieMapper->fetchWithOffset(0, 2));
-var_dump($genreMapper->fetchAll());
+var_dump($movieMapper->fetch(1239127389127318273));
+//var_dump($genreMapper->fetchAll());
+
+
+//$container = new Container();
+//$application = new Application($container);
+//return $application->bootstrap()->send();

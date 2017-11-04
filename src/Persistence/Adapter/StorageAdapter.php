@@ -14,7 +14,7 @@ interface StorageAdapter
      * @param array $parameters
      * @return mixed
      */
-    public function fetch(string $statement, array $parameters = []): array;
+    public function fetch(string $statement, array $parameters = []): ?array;
 
     /**
      * @param string $statement

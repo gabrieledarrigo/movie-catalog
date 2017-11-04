@@ -84,14 +84,9 @@ final class MovieMapperTest extends TestCase
         $this->genreMapper = $this->getMockBuilder(GenreMapper::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->genreMapper->expects($this->once())
-            ->method('fetchAllWithIds')
-            ->with([80, 35])
-            ->willReturn($this->expectedGenres);
     }
 
-    public function testItShouldRetrieveAMovieFromTheDatabase()
+    public function testItShouldRetrieveAMovieFromTheDatabase(): void
     {
         $id = 15;
         $movieMapper = new MovieMapper($this->adapter, $this->genreMapper);
@@ -107,7 +102,24 @@ final class MovieMapperTest extends TestCase
         $this->assertEquals($this->movie['id'], $result->getId());
     }
 
-    public function testItShouldRetrieveAnArrayOfMoviesFromTheDatabase()
+    /**
+     * @expectedException \Darrigo\MovieCatalog\Persistence\Exception\NoResultException
+     * @expectedExceptionMessage No result with id 666 can be found
+     */
+    public function testItShouldThrowANoResultExceptionIfAMovieDoesNotExists(): void
+    {
+        $id = 666;
+        $movieMapper = new MovieMapper($this->adapter, $this->genreMapper);
+
+        $this->adapter->expects($this->once())
+            ->method('fetch')
+            ->with('SELECT * FROM movies WHERE id = :id', [':id' => $id])
+            ->willReturn(null);
+
+        $movieMapper->fetch($id);
+    }
+
+    public function testItShouldRetrieveAnArrayOfMoviesFromTheDatabase(): void
     {
         $movieMapper = new MovieMapper($this->adapter, $this->genreMapper);
 
@@ -124,7 +136,7 @@ final class MovieMapperTest extends TestCase
         $this->assertEquals($this->movie['id'], $result->get(0)->getId());
     }
 
-    public function testItShouldRetrieveAnArrayOfMoviesFromTheDatabaseGivenAnOffsetAndItemsPerPage()
+    public function testItShouldRetrieveAnArrayOfMoviesFromTheDatabaseGivenAnOffsetAndItemsPerPage(): void
     {
         $offset = 0;
         $perPage = 10;

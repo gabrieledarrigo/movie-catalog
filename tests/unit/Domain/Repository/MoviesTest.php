@@ -12,7 +12,7 @@ use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
 
 /**
  * Class MoviesTest
- * @package Tests\Darrigo\MovieCatalog\Persistence\Mapper
+ * @package Tests\Darrigo\MovieCatalog\Domain\Repository
  */
 final class MoviesTest extends TestCase
 {

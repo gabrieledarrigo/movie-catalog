@@ -10,8 +10,8 @@ use PHPUnit\Framework\TestCase;
 use Darrigo\MovieCatalog\Persistence\Adapter\DBAdapter;
 
 /**
- * Class MovieMapper
- * @package Tests\Darrigo\MovieCatalog\Persistence\Mapper
+ * Class GenreMapperTest
+ * @package Tests\Darrigo\MovieCatalog\Persistence\Storage
  */
 final class GenreMapperTest extends TestCase
 {

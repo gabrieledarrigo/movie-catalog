@@ -12,7 +12,7 @@ use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
 use Darrigo\MovieCatalog\Persistence\Adapter\DBAdapter;
 
 /**
- * Class MovieMapper
+ * Class MovieMapperTest
  * @package Tests\Darrigo\MovieCatalog\Persistence\Mapper
  */
 final class MovieMapperTest extends TestCase

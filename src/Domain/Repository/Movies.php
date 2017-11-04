@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class Movies
  * @package Darrigo\MovieCatalog\MoviesTest
  */
-class Movies implements MovieRepository
+class Movies implements MoviesRepository
 {
     /**
      * @var MovieMapper $movieMapper

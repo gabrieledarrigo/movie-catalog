@@ -64,6 +64,4 @@ final class HttpMessage
     {
         return json_encode($this->toArray());
     }
-
-
 }

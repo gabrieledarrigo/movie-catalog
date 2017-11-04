@@ -38,8 +38,7 @@ final class AbstractControllerTest extends TestCase
         $this->movieCatalog = $this->getMockForAbstractClass(MovieCatalogInterface::class);
         $this->serializer = $this->getMockForAbstractClass(SerializerInterface::class);
 
-        $this->controller = new class($this->movieCatalog, $this->serializer) extends AbstractController
-        {
+        $this->controller = new class($this->movieCatalog, $this->serializer) extends AbstractController {
             public function __construct(MovieCatalogInterface $movieCatalog, SerializerInterface $serializer)
             {
                 parent::__construct($movieCatalog, $serializer);

@@ -38,7 +38,7 @@ class Movies implements MoviesRepository
     {
         try {
             return $this->movieMapper->fetch($id);
-        } catch(NoResultException $e) {
+        } catch (NoResultException $e) {
             throw new NoDomainModelException("No Movie with id $id can be found");
         }
     }

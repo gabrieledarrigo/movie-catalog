@@ -91,7 +91,7 @@ class MovieMapper extends AbstractMapper
         return new Movie(
             (int)$data['id'],
             (int)$data['budget'],
-            $genres ,
+            $genres,
             $data['homepage'],
             $data['original_language'],
             $data['original_title'],

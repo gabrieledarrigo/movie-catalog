@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Application\Controller;
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

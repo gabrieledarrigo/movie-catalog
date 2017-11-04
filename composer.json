@@ -21,6 +21,10 @@
     "phpunit/phpunit": "^6.2",
     "friendsofphp/php-cs-fixer": "^2.7"
   },
+  "scripts": {
+    "test": "phpunit tests/",
+    "start": "docker-compose up && php -S localhost:8000 -t public"
+  },
   "minimum-stability": "alpha",
   "autoload": {
     "psr-4": {

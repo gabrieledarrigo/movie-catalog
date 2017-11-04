@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "phpunit tests/",
-    "start": "docker-compose up && php -S localhost:8000 -t public"
+    "start": "docker-compose up -d && php -S localhost:8000 -t public"
   },
   "minimum-stability": "alpha",
   "autoload": {

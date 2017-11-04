@@ -69,6 +69,15 @@ Run the application:
 
 	$ composer run start
 	
+These are the actual application's endpoints:
+
+```
+GET /movies
+GET /movies/{id}
+GET /genres
+GET /genres/{id}
+```
+	
 Enjoy!
 
 

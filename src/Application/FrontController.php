@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
@@ -46,7 +47,7 @@ final class FrontController implements HttpKernelInterface
             return call_user_func_array($match['_controller'], [$request]);
         } catch (HttpException $e) {
             return new Response(
-                new HttpMessage($e->getStatusCode(), $e->getMessage()),
+                new HttpMessage((int) $e->getStatusCode(), $e->getMessage()),
                 $e->getStatusCode(), [
                 'Content-type' => 'application/json'
             ]);
@@ -54,6 +55,12 @@ final class FrontController implements HttpKernelInterface
             return new Response(
                 new HttpMessage(Response::HTTP_NOT_FOUND, 'Resource not found'),
                 Response::HTTP_NOT_FOUND, [
+                'Content-type' => 'application/json'
+            ]);
+        } catch(MethodNotAllowedException $e) {
+            return new Response(
+                new HttpMessage(Response::HTTP_METHOD_NOT_ALLOWED, 'Method not allowed'),
+                Response::HTTP_METHOD_NOT_ALLOWED, [
                 'Content-type' => 'application/json'
             ]);
         }

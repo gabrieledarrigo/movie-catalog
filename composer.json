@@ -14,7 +14,8 @@
     "symfony/routing": "^4.0@beta",
     "symfony/http-foundation": "^4.0@beta",
     "symfony/http-kernel": "^4.0@beta",
-    "phpoption/phpoption": "^1.5"
+    "phpoption/phpoption": "^1.5",
+    "jms/serializer": "^1.9"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.2",

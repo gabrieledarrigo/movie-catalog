@@ -5,9 +5,11 @@ namespace Darrigo\MovieCatalog\Application;
 
 use Darrigo\MovieCatalog\Application\Provider\ApplicationProvider;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
+use Darrigo\MovieCatalog\Domain\Provider\DomainProvider;
 use Darrigo\MovieCatalog\Persistence\Provider\StorageProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -31,20 +33,12 @@ class Application
     }
 
     /**
-     * Register application's routes.
-     */
-    private function registerRoutes(): void
-    {
-        /** @var RouteCollection $routes */
-        $routes = $this->container->get('application.routes');
-    }
-
-    /**
      * Register application's provider.
      */
     private function registerProvider(): void
     {
         (new StorageProvider())->register($this->container);
+        (new DomainProvider())->register($this->container);
         (new ApplicationProvider())->register($this->container);
     }
 
@@ -54,7 +48,6 @@ class Application
     public function bootstrap(): Response
     {
         $this->registerProvider();
-        $this->registerRoutes();
 
         /** @var Request $request */
         $request = $this->container->get('application.request');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests\Darrigo\MovieCatalog\Application;
 
 use Darrigo\MovieCatalog\Application\FrontController;
-use Darrigo\MovieCatalog\Container\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Route;
@@ -89,6 +89,22 @@ final class FrontControllerTest extends TestCase
 
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals(json_encode(['status_code' => Response::HTTP_NOT_FOUND, 'message' => 'Resource not found']), $response->getContent());
+    }
+
+    public function testItShouldReturnAMethodNotAlloweddResponseIfTheHTTPMethodIsNotSupported(): void
+    {
+        $this->routes->add('foo.get', new Route('/foo', []));
+
+        $this->urlMatcher->expects($this->once())
+            ->method('match')
+            ->with('/foo')
+            ->willThrowException(new MethodNotAllowedException(['GET']));
+
+        $frontController = new FrontController($this->urlMatcher);
+        $response = $frontController->handle(Request::create('/foo'));
+
+        $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $response->getStatusCode());
+        $this->assertEquals(json_encode(['status_code' => Response::HTTP_METHOD_NOT_ALLOWED, 'message' => 'Method not allowed']), $response->getContent());
     }
 
     /**

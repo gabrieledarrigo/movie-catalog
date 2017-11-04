@@ -8,9 +8,11 @@ use Darrigo\MovieCatalog\Application\FrontController;
 use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Shared\ProviderInterface;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -33,7 +35,7 @@ class ApplicationProvider implements ProviderInterface
             return $context->fromRequest($request);
         });
 
-        $container->set('application.url.matcher', function() use ($container) {
+        $container->set('application.url.matcher', function () use ($container) {
             $request = $container->get('application.request');
             return new UrlMatcher(
                 $container->get('application.routes'),
@@ -45,15 +47,11 @@ class ApplicationProvider implements ProviderInterface
             $container->get('application.url.matcher')->call($container)
         ));
 
-        $this->registerServices($container);
-    }
+        $container->set('application.serializer', (new SerializerBuilder())->build());
 
-    /**
-     * @param ContainerInterface $container
-     */
-    private function registerControllers(ContainerInterface $container): void
-    {
-        $container->set('application.controller.movie', new MovieController());
+        $this->registerServices($container);
+        $this->registerControllers($container);
+        $this->registerRoutes($container);
     }
 
     /**
@@ -65,5 +63,37 @@ class ApplicationProvider implements ProviderInterface
             $container->get('domain.repository.movies'),
             $container->get('domain.repository.genres')
         ));
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    private function registerControllers(ContainerInterface $container): void
+    {
+        $container->set('application.controller.movie', new MovieController(
+            $container->get('application.service.movie.catalog'),
+            $container->get('application.serializer')
+        ));
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    private function registerRoutes(ContainerInterface $container): void
+    {
+        /** @var RouteCollection $routes */
+        $routes = $container->get('application.routes');
+
+        $routes->add('movies.get', (new Route('/movies', [
+            '_controller' => [
+                $container->get('application.controller.movie'), 'getAll'
+            ]
+        ]))->setMethods('GET'));
+
+        $routes->add('movies.get.id', (new Route('/movies/{id}', [
+            '_controller' => [
+                $container->get('application.controller.movie'), 'get'
+            ]
+        ]))->setMethods('GET'));
     }
 }

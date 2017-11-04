@@ -84,10 +84,14 @@ class MovieMapper extends AbstractMapper
      */
     public function map(array $data): Movie
     {
+        $genres = $data['genres'] === null
+            ? null
+            : $this->genreMapper->fetchAllWithIds(json_decode($data['genres'], true));
+
         return new Movie(
             (int)$data['id'],
             (int)$data['budget'],
-            $this->genreMapper->fetchAllWithIds(json_decode($data['genres'], true)),
+            $genres ,
             $data['homepage'],
             $data['original_language'],
             $data['original_title'],

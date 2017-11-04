@@ -24,7 +24,7 @@ class StorageProvider implements ProviderInterface
         $container->set(
             'persistence.storage.mysql',
             new PDO(
-                'mysql:dbname=movie_catalog;host=127.0.0.1',
+                'mysql:dbname=movie_catalog;host=127.0.0.1;charset=utf8mb4',
                 'movie_user',
                 'password'
             )
@@ -36,13 +36,13 @@ class StorageProvider implements ProviderInterface
         );
 
         $container->set(
-            'persistence.mapper.movie',
-            new MovieMapper($container->get('persistence.adapter.db'), $container->get('persistence.mapper.genre'))
+            'persistence.mapper.genre',
+            new GenreMapper($container->get('persistence.adapter.db'))
         );
 
         $container->set(
-            'persistence.mapper.genre',
-            new GenreMapper($container->get('persistence.adapter.db'))
+            'persistence.mapper.movie',
+            new MovieMapper($container->get('persistence.adapter.db'), $container->get('persistence.mapper.genre'))
         );
     }
 }

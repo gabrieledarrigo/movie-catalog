@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Application\Service;
 
-use Darrigo\MovieCatalog\Domain\Model\Genre;
-use Darrigo\MovieCatalog\Domain\Model\Movie;
+use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Repository\GenresRepository;
 use Darrigo\MovieCatalog\Domain\Repository\MoviesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use PhpOption\None;
+use PhpOption\Option;
+use PhpOption\Some;
 
 /**
  * Class MovieCatalog
@@ -36,23 +37,45 @@ class MovieCatalog implements MovieCatalogInterface
         $this->genresRepository = $genreRepository;
     }
 
-    public function getMovie(int $id): Movie
+    /**
+     * @param int $id
+     * @return Option
+     */
+    public function getMovie(int $id): Option
     {
-        return $this->movieRepository->get($id);
+        try {
+            return new Some($this->movieRepository->get($id));
+        } catch (NoDomainModelException $e) {
+            return None::create();
+        }
     }
 
-    public function getMovies(): ArrayCollection
+    /**
+     * @return Option
+     */
+    public function getMovies(): Option
     {
-        return $this->movieRepository->getAll();
+        return new Some($this->movieRepository->getAll());
     }
 
-    public function getGenre(int $id): Genre
+    /**
+     * @param int $id
+     * @return Option
+     */
+    public function getGenre(int $id): Option
     {
-        // TODO: Implement getGenre() method.
+        try {
+            return new Some($this->genresRepository->get($id));
+        } catch(NoDomainModelException $e) {
+            return None::create();
+        }
     }
 
-    public function getGenres(): ArrayCollection
+    /**
+     * @return Option
+     */
+    public function getGenres(): Option
     {
-        // TODO: Implement getGenres() method.
+        return new Some($this->genresRepository->getAll());
     }
 }

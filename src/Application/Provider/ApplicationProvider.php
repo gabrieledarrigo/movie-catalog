@@ -5,6 +5,7 @@ namespace Darrigo\MovieCatalog\Application\Provider;
 
 use Darrigo\MovieCatalog\Application\Controller\MovieController;
 use Darrigo\MovieCatalog\Application\FrontController;
+use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
 use Darrigo\MovieCatalog\Container\ContainerInterface;
 use Darrigo\MovieCatalog\Shared\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +19,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class ApplicationProvider implements ProviderInterface
 {
-    /**
-     * @param ContainerInterface $container
-     */
-    private function registerControllers(ContainerInterface $container): void
-    {
-        $container->set('application.controllers.movie', new MovieController());
-    }
-
     /**
      * @param ContainerInterface $container
      */
@@ -50,6 +43,27 @@ class ApplicationProvider implements ProviderInterface
 
         $container->set('application.front.controller', new FrontController(
             $container->get('application.url.matcher')->call($container)
+        ));
+
+        $this->registerServices($container);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    private function registerControllers(ContainerInterface $container): void
+    {
+        $container->set('application.controller.movie', new MovieController());
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    private function registerServices(ContainerInterface $container): void
+    {
+        $container->set('application.service.movie.catalog', new MovieCatalog(
+            $container->get('domain.repository.movies'),
+            $container->get('domain.repository.genres')
         ));
     }
 }

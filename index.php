@@ -1,30 +1,44 @@
 <?php
 declare(strict_types=1);
-
-use Darrigo\MovieCatalog\Container\Container;
-use Darrigo\MovieCatalog\Application\Application;
-use Darrigo\MovieCatalog\Domain\Model\Movie;
-use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
-use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
-use Darrigo\MovieCatalog\Persistence\Provider\StorageProvider;
-
 require 'vendor/autoload.php';
 
 
+use Darrigo\MovieCatalog\Application\Provider\ApplicationProvider;
+use Darrigo\MovieCatalog\Container\Container;
+use Darrigo\MovieCatalog\Application\Application;
+use Darrigo\MovieCatalog\Domain\Model\Movie;
+use Darrigo\MovieCatalog\Domain\Provider\DomainProvider;
+use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
+use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
+use Darrigo\MovieCatalog\Persistence\Provider\StorageProvider;
+use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
+
 $container = new Container();
-$provider = new StorageProvider();
-$provider->register($container);
+$persistence = new StorageProvider();
+$persistence->register($container);
 
-$storage = $container->get('persistence.storage.mysql');
-$adapter = $container->get('persistence.adapter.db');
+$domain = new DomainProvider();
+$domain->register($container);
 
-/** @var MovieMapper $movieMapper */
-$movieMapper = $container->get('persistence.mapper.movie');
+$app = new ApplicationProvider();
+$app->register($container);
 
-/** @var GenreMapper $genreMapper */
-$genreMapper = $container->get('persistence.mapper.genre');
+/** @var MovieCatalog $service */
+$service = $container->get('application.service.movie.catalog');
+$result = $service->get(5345234234);
 
-var_dump($movieMapper->fetch(1239127389127318273));
+
+
+//$storage = $container->get('persistence.storage.mysql');
+//$adapter = $container->get('persistence.adapter.db');
+//
+///** @var MovieMapper $movieMapper */
+//$movieMapper = $container->get('persistence.mapper.movie');
+//
+///** @var GenreMapper $genreMapper */
+//$genreMapper = $container->get('persistence.mapper.genre');
+//
+//var_dump($movieMapper->fetch(1239127389127318273));
 //var_dump($genreMapper->fetchAll());
 
 

@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace Tests\Darrigo\MovieCatalog\Application;
 
 use Darrigo\MovieCatalog\Application\Service\MovieCatalog;
+use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Domain\Repository\GenresRepository;
 use Darrigo\MovieCatalog\Domain\Repository\MoviesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use PhpOption\None;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +24,9 @@ final class MovieCatalogTest extends TestCase
      */
     private $movies;
 
+    /**
+     * @var ArrayCollection $genres
+     */
     private $genres;
 
     /**
@@ -77,21 +82,16 @@ final class MovieCatalogTest extends TestCase
                 956
             )
         ]);
+        $this->genres = new ArrayCollection([
+            new Genre(12, 'Adventure'),
+            new Genre(18, 'Drama'),
+            new Genre(27, 'Horror'),
+            new Genre(35, 'Comedy'),
+            new Genre(37, 'Western'),
+        ]);
     }
 
-    public function testItShouldReturnAllMovies(): void
-    {
-        $this->moviesRepository->expects($this->once())
-            ->method('getAll')
-            ->willReturn($this->movies);
-
-        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
-        $result = $movieCatalog->getMovies();
-
-        $this->assertEquals($this->movies, $result);
-    }
-
-    public function testItShouldReturnASpecificMovie(): void
+    public function testItShouldReturnAnOptionFilledWithASpecificMovie(): void
     {
         $id = 15;
         $this->moviesRepository->expects($this->once())
@@ -102,6 +102,78 @@ final class MovieCatalogTest extends TestCase
         $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
         $result = $movieCatalog->getMovie($id);
 
-        $this->assertEquals($this->movies->first(), $result);
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($this->movies->first(), $result->get());
+    }
+
+    public function testItShouldReturnAnEmptyOptionIfNoMovieCanBeRetrievedFromTheRepositoryLayer(): void
+    {
+        $id = 172;
+        $this->moviesRepository->expects($this->once())
+            ->method('get')
+            ->with($id)
+            ->willThrowException(new NoDomainModelException());
+
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $result = $movieCatalog->getMovie($id);
+
+        $this->assertTrue($result->isEmpty());
+        $this->assertSame(None::create(), $result);
+    }
+
+    public function testItShouldReturnAnOptionWithACollectionOfMovies(): void
+    {
+        $this->moviesRepository->expects($this->once())
+            ->method('getAll')
+            ->willReturn($this->movies);
+
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $result = $movieCatalog->getMovies();
+
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($this->movies, $result->get());
+    }
+
+    public function testItShouldReturnAnOptionFilledWithASpecificGenre(): void
+    {
+        $id = 18;
+        $this->genresRepository->expects($this->once())
+            ->method('get')
+            ->with($id)
+            ->willReturn($this->genres->first());
+
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $result = $movieCatalog->getGenre($id);
+
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($this->genres->first(), $result->get());
+    }
+
+    public function testItShouldReturnAnEmptyOptionIfNoGenreCanBeRetrievedFromTheRepositoryLayer(): void
+    {
+        $id = 1200;
+        $this->genresRepository->expects($this->once())
+            ->method('get')
+            ->with($id)
+            ->willThrowException(new NoDomainModelException());
+
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $result = $movieCatalog->getGenre($id);
+
+        $this->assertTrue($result->isEmpty());
+        $this->assertSame(None::create(), $result);
+    }
+
+    public function testItShouldReturnAnOptionWithACollectionOfGenres(): void
+    {
+        $this->genresRepository->expects($this->once())
+            ->method('getAll')
+            ->willReturn($this->genres);
+
+        $movieCatalog = new MovieCatalog($this->moviesRepository, $this->genresRepository);
+        $result = $movieCatalog->getGenres();
+
+        $this->assertFalse($result->isEmpty());
+        $this->assertEquals($this->genres, $result->get());
     }
 }

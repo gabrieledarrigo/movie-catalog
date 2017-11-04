@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Darrigo\MovieCatalog\Domain\Repository;
 
+use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -30,10 +32,15 @@ class Movies implements MoviesRepository
     /**
      * @param int $id
      * @return Movie
+     * @throws NoDomainModelException
      */
     public function get(int $id): Movie
     {
-        return $this->movieMapper->fetch($id);
+        try {
+            return $this->movieMapper->fetch($id);
+        } catch(NoResultException $e) {
+            throw new NoDomainModelException("No Movie with id $id can be found");
+        }
     }
 
     /**

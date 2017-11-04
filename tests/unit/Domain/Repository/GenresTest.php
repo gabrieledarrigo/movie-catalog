@@ -6,6 +6,7 @@ namespace Tests\Darrigo\MovieCatalog\Domain\Repository;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Domain\Repository\Genres;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +48,7 @@ final class GenresTest extends TestCase
             ->willReturn($this->genres);
     }
 
-    public function testItShouldRetrieveAGenre()
+    public function testItShouldRetrieveAGenre(): void
     {
         $id = 12;
         $this->genreMapper->expects($this->once())
@@ -63,7 +64,22 @@ final class GenresTest extends TestCase
         $this->assertEquals($this->genres[0], $result);
     }
 
-    public function testItShouldRetrieveACollectionOfGenres()
+    /**
+     * @expectedException \Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException
+     * @expectedExceptionMessage No Genre with id 27 can be found
+     */
+    public function testItShouldThrowANoDomainModelExceptionIfAGenreCannotBeFound(): void
+    {
+        $id = 27;
+        $this->genreMapper->expects($this->once())
+            ->method('fetch')
+            ->with($id)
+            ->willThrowException(new NoResultException());
+
+        (new Genres($this->genreMapper))->get($id);
+    }
+
+    public function testItShouldRetrieveACollectionOfGenres(): void
     {
         $repository = new Genres($this->genreMapper);
 
@@ -73,7 +89,7 @@ final class GenresTest extends TestCase
         $this->assertEquals($this->genres, $result);
     }
 
-    public function testItShouldRetrieveACollectionOfGenresWithSpecificIds()
+    public function testItShouldRetrieveACollectionOfGenresWithSpecificIds(): void
     {
         $ids = [18, 35, 37];
         $expected = new ArrayCollection([

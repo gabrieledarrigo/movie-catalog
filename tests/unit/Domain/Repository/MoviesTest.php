@@ -6,6 +6,7 @@ namespace Tests\Darrigo\MovieCatalog\Domain\Repository;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Domain\Repository\Movies;
+use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
@@ -77,7 +78,7 @@ final class MoviesTest extends TestCase
             ->willReturn($this->movies);
     }
 
-    public function testItShouldRetrieveAMovie()
+    public function testItShouldRetrieveAMovie(): void
     {
         $id = 15;
         $this->movieMapper->expects($this->once())
@@ -93,7 +94,22 @@ final class MoviesTest extends TestCase
         $this->assertEquals($this->movies[0], $result);
     }
 
-    public function testItShouldRetrieveAnACollectionOfMovies()
+    /**
+     * @expectedException \Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException
+     * @expectedExceptionMessage No Movie with id 99 can be found
+     */
+    public function testItShouldThrowANoDomainModelExceptionIfAGenreCannotBeFound(): void
+    {
+        $id = 99;
+        $this->movieMapper->expects($this->once())
+            ->method('fetch')
+            ->with($id)
+            ->willThrowException(new NoResultException());
+
+        (new Movies($this->movieMapper))->get($id);
+    }
+
+    public function testItShouldRetrieveAnACollectionOfMovies(): void
     {
         $repository = new Movies($this->movieMapper);
 
@@ -103,7 +119,7 @@ final class MoviesTest extends TestCase
         $this->assertEquals($this->movies, $result);
     }
 
-    public function testItShouldRetrieveAnACollectionOfMoviesInASpecificRange()
+    public function testItShouldRetrieveAnACollectionOfMoviesInASpecificRange(): void
     {
         $offset = 0;
         $perPage = 10;
@@ -120,7 +136,7 @@ final class MoviesTest extends TestCase
         $this->assertEquals($this->movies, $result);
     }
 
-    public function testItShouldKnowIfItHasASpecificMovies()
+    public function testItShouldKnowIfItHasASpecificMovies(): void
     {
         $id = 10;
         $repository = new Movies($this->movieMapper);

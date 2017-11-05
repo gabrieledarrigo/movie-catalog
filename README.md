@@ -18,16 +18,16 @@ _MovieCatalog_ architecture is very simple and is organized in this way:
 
 The application layer that handle the connection with the database through an adapter.  
 Raw data is transformed into domain objects by the _Mapper_ Layer.  
-To perform database operation `\PDO` was the privileged choice for its simplicity.
+To perform database operations `\PDO` was the privileged choice for its simplicity.
 
 ### Domain
 
 The core domain context is inside this package.  
-It holds the definition of two basic domain models, `Movie` and `Genre`, and the relative repositories which acts as a collection 
-of objects for each other component external to the Domain package.  
+It holds the definition of two basic domain models, `Movie` and `Genre`, with the relative repositories, which acts as a collection 
+of objects for every other component that is external to the Domain package.  
 
-This layer does not use any framework or library with the exception of `Doctrine\Common\Collections\ArrayCollection` that is
-was chosen in substitution of plain PHP arrays to represent collections of objects.
+This layer does not use any framework or library, with the exception of `Doctrine\Common\Collections\ArrayCollection` that
+was chosen instead of plain PHP arrays to represent collections of objects.
 
 
 ### Container
@@ -39,21 +39,21 @@ This package contains the definition of a very simple dependency injection conta
 
 The application layer expose movies metadata on the HTTP medium.  
 This layer use few _Symfony_ components, like `symfony/routing`, `symfony/http-foundation`, and `symfony/http-kernel` in order
-to abstract the most common web application behaviors (like routing, request and response abstraction and so on) and to avoid to write to reinvent the wheel.
+to abstract the most common web application behaviors (like routing, request and response abstraction and so on).
 
 ### Dependency Injection
 
 Each layer define a `Provider` class that is responsible to define the package dependencies through the `Container` class.  
 
-`Provider` class is the *only* place where `Container` class is injected as a dependency and actually used as a _Service Locator_; every other _MovieCatalog_ component define
-its dependencies through the constructor.
+`Provider` class is the **only** place where `Container` class is injected as a dependency and used as a _Service Locator_;  
+every other _MovieCatalog_ component define its dependencies through the constructor.
 
 ## Getting started
 
 ### Prerequisites:
 
 To run _MovieCatalog_ you need [Docker](https://www.docker.com/community-edition), [PHP 7.1](http://php.net/downloads.php) 
-and [Composer](https://getcomposer.org/doc/00-intro.md) to run the application.
+and [Composer](https://getcomposer.org/doc/00-intro.md).
 
 ### Installation and run
 

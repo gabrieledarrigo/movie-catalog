@@ -6,7 +6,7 @@ namespace Darrigo\MovieCatalog\Domain\Repository;
 use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Movie;
 use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
-use Darrigo\MovieCatalog\Persistence\Mapper\MovieMapper;
+use Darrigo\MovieCatalog\Persistence\Mapper\MapperInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -16,15 +16,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Movies implements MoviesRepository
 {
     /**
-     * @var MovieMapper $movieMapper
+     * @var MapperInterface $movieMapper
      */
     private $movieMapper;
 
     /**
      * Movies constructor.
-     * @param MovieMapper $movieMapper
+     * @param MapperInterface $movieMapper
      */
-    public function __construct(MovieMapper $movieMapper)
+    public function __construct(MapperInterface $movieMapper)
     {
         $this->movieMapper = $movieMapper;
     }

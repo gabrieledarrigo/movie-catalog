@@ -9,8 +9,6 @@ use Darrigo\MovieCatalog\Domain\Provider\DomainProvider;
 use Darrigo\MovieCatalog\Persistence\Provider\StorageProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Class Application

@@ -6,7 +6,7 @@ namespace Darrigo\MovieCatalog\Domain\Repository;
 use Darrigo\MovieCatalog\Domain\Exception\NoDomainModelException;
 use Darrigo\MovieCatalog\Domain\Model\Genre;
 use Darrigo\MovieCatalog\Persistence\Exception\NoResultException;
-use Darrigo\MovieCatalog\Persistence\Mapper\GenreMapper;
+use Darrigo\MovieCatalog\Persistence\Mapper\MapperInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -16,15 +16,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Genres implements GenresRepository
 {
     /**
-     * @var GenreMapper $genreMapper
+     * @var MapperInterface $genreMapper
      */
     private $genreMapper;
 
     /**
      * Genres constructor.
-     * @param GenreMapper $genreMapper
+     * @param MapperInterface $genreMapper
      */
-    public function __construct(GenreMapper $genreMapper)
+    public function __construct(MapperInterface $genreMapper)
     {
         $this->genreMapper = $genreMapper;
     }

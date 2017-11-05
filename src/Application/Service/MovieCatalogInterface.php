@@ -11,11 +11,26 @@ use PhpOption\Option;
  */
 interface MovieCatalogInterface
 {
+    /**
+     * @param int $id
+     * @return Option
+     */
     public function getMovie(int $id): Option;
 
+    /**
+     * @param int $page
+     * @return Option
+     */
     public function getMovies(int $page): Option;
 
+    /**
+     * @param int $id
+     * @return Option
+     */
     public function getGenre(int $id): Option;
 
+    /**
+     * @return Option
+     */
     public function getGenres(): Option;
 }

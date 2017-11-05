@@ -6,7 +6,7 @@ namespace Darrigo\MovieCatalog\Persistence\Adapter;
 use \PDO;
 
 /**
- * Class MySqlStorage
+ * Class DBAdapter
  * @package Darrigo\MovieCatalog\Persistence\Adapter
  */
 class DBAdapter implements StorageAdapter

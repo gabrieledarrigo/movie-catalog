@@ -7,6 +7,10 @@ use Darrigo\MovieCatalog\Application\Service\MovieCatalogInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class AbstractController
+ * @package Darrigo\MovieCatalog\Application\Controller
+ */
 abstract class AbstractController
 {
     /**

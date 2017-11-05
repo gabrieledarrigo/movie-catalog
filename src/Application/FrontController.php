@@ -47,27 +47,27 @@ final class FrontController implements HttpKernelInterface
             return call_user_func_array($match['_controller'], [$request]);
         } catch (HttpException $e) {
             return new Response(
-                new HttpMessage((int) $e->getStatusCode(), $e->getMessage()),
+                new HttpMessage((int)$e->getStatusCode(), $e->getMessage()),
                 $e->getStatusCode(),
                 [
-                'Content-type' => 'application/json'
-            ]
+                    'Content-type' => 'application/json'
+                ]
             );
         } catch (ResourceNotFoundException $e) {
             return new Response(
                 new HttpMessage(Response::HTTP_NOT_FOUND, 'Resource not found'),
                 Response::HTTP_NOT_FOUND,
                 [
-                'Content-type' => 'application/json'
-            ]
+                    'Content-type' => 'application/json'
+                ]
             );
         } catch (MethodNotAllowedException $e) {
             return new Response(
                 new HttpMessage(Response::HTTP_METHOD_NOT_ALLOWED, 'Method not allowed'),
                 Response::HTTP_METHOD_NOT_ALLOWED,
                 [
-                'Content-type' => 'application/json'
-            ]
+                    'Content-type' => 'application/json'
+                ]
             );
         }
     }
